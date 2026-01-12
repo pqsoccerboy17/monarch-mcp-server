@@ -20,9 +20,13 @@ sys.path.insert(0, str(src_path))
 from monarchmoney import MonarchMoney, RequireMFAException
 from dotenv import load_dotenv
 from monarch_mcp_server.secure_session import secure_session
+from monarch_mcp_server.security import enforce_gql_aiohttp_tls_verification
 
 async def main():
     load_dotenv()
+    # Security hardening: verify TLS certificates for HTTPS by default.
+    enforce_gql_aiohttp_tls_verification()
+
     
     print("\n🏦 Monarch Money - Claude Desktop Setup")
     print("=" * 45)

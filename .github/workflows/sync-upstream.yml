@@ -1,0 +1,47 @@
+name: Sync from upstream
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Weekly on Mondays at 08:17 UTC (adjust anytime)
+    - cron: '17 8 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/robcerda/monarch-mcp-server.git || true
+          git fetch upstream --prune
+
+      - name: Merge upstream/main into local main
+        run: |
+          git checkout main
+          git merge --no-edit upstream/main
+
+      - name: Create PR with upstream changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: sync/upstream
+          delete-branch: true
+          title: 'Sync upstream: robcerda/monarch-mcp-server'
+          body: |
+            Automated sync PR bringing changes from upstream.
+
+            - Upstream: https://github.com/robcerda/monarch-mcp-server
+            - Review and merge when ready.
+          commit-message: 'Sync upstream'
+          labels: |
+            upstream-sync
+          base: main

@@ -3,8 +3,9 @@ name: Sync from upstream
 on:
   workflow_dispatch: {}
   schedule:
-    # Weekly on Mondays at 08:17 UTC (adjust anytime)
-    - cron: '17 8 * * 1'
+    # Weekly on Mondays. GitHub Actions cron is UTC.
+    # If you want this to align to 9:00am in your local timezone, adjust as needed.
+    - cron: '0 14 * * 1'
 
 permissions:
   contents: write
@@ -24,24 +25,34 @@ jobs:
           git remote add upstream https://github.com/robcerda/monarch-mcp-server.git || true
           git fetch upstream --prune
 
-      - name: Merge upstream/main into local main
+      - name: Prepare sync branch with upstream changes
         run: |
-          git checkout main
+          git checkout -B sync/upstream main
           git merge --no-edit upstream/main
 
-      - name: Create PR with upstream changes
+      - name: Open / update PR
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: sync/upstream
           delete-branch: true
+          base: main
           title: 'Sync upstream: robcerda/monarch-mcp-server'
-          body: |
-            Automated sync PR bringing changes from upstream.
-
-            - Upstream: https://github.com/robcerda/monarch-mcp-server
-            - Review and merge when ready.
-          commit-message: 'Sync upstream'
+          assignees: pqsoccerboy17
           labels: |
             upstream-sync
-          base: main
+          commit-message: 'Sync upstream'
+          body: |
+            This PR keeps your Monarch MCP server up to date.
+
+            ✅ What you need to do (simple):
+            1) Click **Merge pull request** (green button)
+            2) On your Mac, open Terminal and run:
+
+               cd /Users/mdmac/Projects/monarch-mcp-server
+               ./scripts/update_from_fork.sh
+
+            3) If Monarch tools act weird in Claude:
+               - Quit and reopen **Claude Desktop**
+
+            If the merge has conflicts: do NOT guess—ask for help.

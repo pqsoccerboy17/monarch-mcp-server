@@ -40,11 +40,13 @@ async def main():
     except Exception as e:
         print(f"⚠️  Could not check version: {e}")
     
-    mm = MonarchMoney()
+    # Use a stable, refreshable session file path (not the repo directory).
+    mm = MonarchMoney(session_file=str(secure_session.session_file_path()))
     
     try:
         # Clear any existing sessions (both old pickle files and keyring)
         secure_session.delete_token()
+        secure_session.delete_session_file()
         print("🗑️ Cleared existing secure sessions")
         
         # Ask about MFA setup

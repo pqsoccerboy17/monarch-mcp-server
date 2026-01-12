@@ -60,9 +60,22 @@ class MonarchConfig(BaseModel):
 
 async def get_monarch_client() -> MonarchMoney:
     """Get or create MonarchMoney client instance using secure session storage."""
-    # Try to get authenticated client from secure session
-    client = secure_session.get_authenticated_client()
+    # 1) Prefer refreshable saved session file (long-lived).
+    try:
+        session_file = secure_session.session_file_path()
+        if session_file.exists():
+            client = MonarchMoney(session_file=str(session_file))
+            # This will load the saved session without requiring email/password.
+            await client.login(use_saved_session=True, save_session=True)
+            logger.info("✅ Using authenticated client from saved session file")
+            # Also keep token in keyring as a fallback.
+            secure_session.save_authenticated_session(client)
+            return client
+    except Exception as e:
+        logger.warning("⚠️  Failed to use saved session file; will try token fallback: %s", e)
 
+    # 2) Fallback to keyring token.
+    client = secure_session.get_authenticated_client()
     if client is not None:
         logger.info("✅ Using authenticated client from secure keyring storage")
         return client
@@ -73,7 +86,7 @@ async def get_monarch_client() -> MonarchMoney:
 
     if email and password:
         try:
-            client = MonarchMoney()
+            client = MonarchMoney(session_file=str(secure_session.session_file_path()))
             await client.login(email, password)
             logger.info(
                 "Successfully logged into Monarch Money with environment credentials"
@@ -87,7 +100,9 @@ async def get_monarch_client() -> MonarchMoney:
             logger.error(f"Failed to login to Monarch Money: {e}")
             raise
 
-    raise RuntimeError("🔐 Authentication needed! Run: python login_setup.py")
+    raise RuntimeError(
+        "🔐 Authentication needed! Run: /opt/homebrew/bin/uv run python login_setup.py"
+    )
 
 
 @mcp.tool()

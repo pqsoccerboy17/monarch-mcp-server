@@ -1,5 +1,8 @@
 """
-Secure session management for Monarch Money MCP Server using keyring.
+Secure session management for Monarch Money MCP Server.
+
+Uses monarchmoneycommunity library (community fork with updated API endpoint).
+Session is stored as pickle file; keyring is used as backup for the token.
 """
 
 import keyring
@@ -8,6 +11,7 @@ import os
 import sys
 from pathlib import Path
 from typing import Optional
+
 from monarchmoney import MonarchMoney
 
 logger = logging.getLogger(__name__)
@@ -100,29 +104,41 @@ class SecureMonarchSession:
             logger.warning("⚠️  Failed to delete session file: %s", e)
 
     def get_authenticated_client(self) -> Optional[MonarchMoney]:
-        """Get an authenticated MonarchMoney client (best-effort, no network)."""
-        # Prefer refreshable session file if present.
-        try:
-            session_file = self.session_file_path()
-            if session_file.exists():
-                client = MonarchMoney(session_file=str(session_file))
-                logger.info("✅ MonarchMoney client created with saved session file")
+        """
+        Get an authenticated MonarchMoney client using saved session.
+
+        Returns:
+            MonarchMoney instance if session exists, None otherwise.
+        """
+        session_file = self.session_file_path()
+
+        # Try session file first (preferred)
+        if session_file.exists():
+            try:
+                client = MonarchMoney(
+                    session_file=str(session_file),
+                    timeout=30
+                )
+                logger.info("✅ MonarchMoney client created with saved session")
                 return client
-        except Exception as e:
-            logger.warning("⚠️  Could not use session file: %s", e)
+            except Exception as e:
+                logger.warning("⚠️  Could not use session file: %s", e)
 
-        # Fallback to keyring token.
+        # Fallback to keyring token
         token = self.load_token()
-        if not token:
-            return None
+        if token:
+            try:
+                client = MonarchMoney(
+                    session_file=str(session_file),
+                    token=token,
+                    timeout=30
+                )
+                logger.info("✅ MonarchMoney client created with keyring token")
+                return client
+            except Exception as e:
+                logger.error(f"❌ Failed to create client with token: {e}")
 
-        try:
-            client = MonarchMoney(token=token)
-            logger.info("✅ MonarchMoney client created with stored token")
-            return client
-        except Exception as e:
-            logger.error(f"❌ Failed to create MonarchMoney client: {e}")
-            return None
+        return None
 
     def save_authenticated_session(self, mm: MonarchMoney) -> None:
         """Save the session from an authenticated MonarchMoney instance."""

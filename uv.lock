@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -331,7 +331,7 @@ wheels = [
 
 [[package]]
 name = "gql"
-version = "3.5.3"
+version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -339,9 +339,9 @@ dependencies = [
     { name = "graphql-core" },
     { name = "yarl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/34/ed/44ffd30b06b3afc8274ee2f38c3c1b61fe4740bf03d92083e43d2c17ac77/gql-3.5.3.tar.gz", hash = "sha256:393b8c049d58e0d2f5461b9d738a2b5f904186a40395500b4a84dd092d56e42b", size = 180504, upload-time = "2025-05-20T12:34:08.954Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/06/9f/cf224a88ed71eb223b7aa0b9ff0aa10d7ecc9a4acdca2279eb046c26d5dc/gql-4.0.0.tar.gz", hash = "sha256:f22980844eb6a7c0266ffc70f111b9c7e7c7c13da38c3b439afc7eab3d7c9c8e", size = 215644, upload-time = "2025-08-17T14:32:35.397Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cb/50/2f4e99b216821ac921dbebf91c644ba95818f5d07857acadee17220221f3/gql-3.5.3-py2.py3-none-any.whl", hash = "sha256:e1fcbde2893fcafdd28114ece87ff47f1cc339a31db271fc4e1d528f5a1d4fbc", size = 74348, upload-time = "2025-05-20T12:34:07.687Z" },
+    { url = "https://files.pythonhosted.org/packages/ac/94/30bbd09e8d45339fa77a48f5778d74d47e9242c11b3cd1093b3d994770a5/gql-4.0.0-py3-none-any.whl", hash = "sha256:f3beed7c531218eb24d97cb7df031b4a84fdb462f4a2beb86e2633d395937479", size = 89900, upload-time = "2025-08-17T14:32:34.029Z" },
 ]
 
 [[package]]
@@ -579,7 +579,8 @@ dependencies = [
     { name = "gql" },
     { name = "keyring" },
     { name = "mcp", extra = ["cli"] },
-    { name = "monarchmoney" },
+    { name = "monarchmoneycommunity" },
+    { name = "packaging" },
     { name = "pydantic" },
     { name = "python-dotenv" },
 ]
@@ -598,12 +599,13 @@ dev = [
 requires-dist = [
     { name = "asyncio", specifier = ">=3.4.3" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
-    { name = "gql", specifier = ">=3.4,<4.0" },
+    { name = "gql", specifier = ">=4.0" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=5.12.0" },
     { name = "keyring", specifier = ">=24.0.0" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.0.0" },
-    { name = "monarchmoney", specifier = ">=0.1.15" },
+    { name = "monarchmoneycommunity", specifier = ">=1.0.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
+    { name = "packaging", specifier = ">=21.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.0.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0.0" },
@@ -613,17 +615,17 @@ requires-dist = [
 provides-extras = ["dev"]
 
 [[package]]
-name = "monarchmoney"
-version = "0.1.15"
+name = "monarchmoneycommunity"
+version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "gql" },
     { name = "oathtool" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e4/fd/1ddc7ca4ff461c2420dbc08bfff7f6672815c7ca49e871338b1839d7b898/monarchmoney-0.1.15.tar.gz", hash = "sha256:cd11ecdf1b9ba3be9f5a426cb76735fdfc56f750a4e838dc4ced1d9c5c99cc01", size = 23689, upload-time = "2025-01-29T17:10:11.967Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/08/82b4df2e4e3fcf14efb6d475e77ed24a04149a06f31663fcb265ec301ad3/monarchmoneycommunity-1.1.0.tar.gz", hash = "sha256:015fb2f13f4fa8079484e9000546ee84dfe7202b69194515577a67fd65fde506", size = 26321, upload-time = "2026-01-18T04:49:56.118Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/47/28/e8fbd8ccd705c4d33423696af90bf6e6256d4669d9a4c89a06aec4cce2f8/monarchmoney-0.1.15-py2.py3-none-any.whl", hash = "sha256:fab999b88d465f7f14cdc132d1dc3b7f7e2427ef738b9f4da5d5d4fc16effa5f", size = 19974, upload-time = "2025-01-29T17:10:09.922Z" },
+    { url = "https://files.pythonhosted.org/packages/a9/ad/eeaf02f06315623cb7c496f3978d3c8c4dedde3a141f97cbbeef30e6378e/monarchmoneycommunity-1.1.0-py3-none-any.whl", hash = "sha256:f166f4a7f2d95ec3162bbf26fb221448437c7957eeff5b9eef30614539da0358", size = 21169, upload-time = "2026-01-18T04:49:54.842Z" },
 ]
 
 [[package]]

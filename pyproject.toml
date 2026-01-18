@@ -21,12 +21,13 @@ classifiers = [
 requires-python = ">=3.12"
 dependencies = [
     "mcp[cli]>=1.0.0",
-    "monarchmoneycommunity>=1.0.0",  # Community fork with updated API endpoint
-    "gql>=3.4,<4.0",
+    "monarchmoneycommunity>=1.0.0",  # Community fork with correct API endpoint (api.monarch.com)
+    "gql>=4.0",  # Required by monarchmoneycommunity
     "keyring>=24.0.0",
     "python-dotenv>=1.0.0",
     "pydantic>=2.0.0",
     "asyncio>=3.4.3",
+    "packaging>=21.0",  # For version comparison in health checks
 ]
 
 [project.optional-dependencies]

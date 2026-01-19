@@ -85,10 +85,10 @@ async def get_monarch_client() -> MonarchMoney:
             # Also keep token in keyring as a fallback.
             secure_session.save_authenticated_session(client)
             return client
-    except Exception as e:
-        logger.warning(
-            "Failed to use saved session file; will try token fallback: %s", e
-        )
+        except Exception as e:
+            logger.warning(
+                "Failed to use saved session file; will try token fallback: %s", e
+            )
 
     # 2) Fallback to keyring token.
     client = secure_session.get_authenticated_client()

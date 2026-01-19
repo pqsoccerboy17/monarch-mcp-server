@@ -93,3 +93,8 @@ logs/
 tmp/
 temp/
 .tmp/
+
+# Cursor/AI local settings
+.cursor/
+.claude/
+.aider*
